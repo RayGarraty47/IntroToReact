@@ -1,15 +1,32 @@
 import { createRoot } from "react-dom/client";
+import { Link, BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import SearchParams from "./SearchParams";
+import Details from "./Details";
 
-// Passing the following parent properties
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
+  },
+});
 
 const App = () => {
   return (
-  <div> 
-    <h1>Adopt Me!</h1>
-    <SearchParams />
-  </div>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <header>
+          <Link to="/">Adopt Me!</Link>
+        </header>
+            <Routes>
+              <Route path="/details/:id" element={<Details />} />
+              <Route path="/" element={<SearchParams />} />
+            </Routes>
+        </QueryClientProvider>
+  </BrowserRouter>
   );
 };
 
@@ -18,35 +35,3 @@ const root = createRoot(container);
 root.render(<App />);
 
 
-
-
-
-const A = "A";
-let F;
-
-function doStuff(B) {
-  console.log(B); // in scope
-  const C = "C";
-  let H = "H";
-  if (1 + 1 === 2) {
-    const D = "D";
-    H = "something else"; // in scope
-  }
-  console.log(D); //out of scope D was declared in if statement block
-  console.log(H); // in scope H was declared in same funciton block
-  F = "F"; 
-}
-
-let E = 0;
-while (E < 3) {
-  E++;
-  console.log(A); // in scope
-  const G = "G";
-}
-console.log(E); // in scope 
-console.log(G); // out of scope
-
-doStuff("B");
-console.log(B); // out of scope
-console.log(C); // out of scope
-console.log(F); // in scope
